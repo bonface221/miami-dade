@@ -61,6 +61,9 @@ def homePage(request):
 
 @login_required(login_url='login')
 def showCases(request):
+    if request.method == 'POST':
+        data= request.POST
+        print(data)
     context= dict()
 
     return render(request,'base/showCases.html',context)
