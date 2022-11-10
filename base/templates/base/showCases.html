@@ -1,8 +1,40 @@
-{% extends 'main.html' %}
+{% extends 'main.html' %} {% block content %}
 
-{% block content %}
-
-<div class="container">
-    <p>Hello these are the available cases</p>
+<div class="container-fluid">
+	<h3 class="text-center my-3">Available cases : Official records Standard search</h3>
+	<div class="table-responsive p-2">
+		<table class="table table-bordered border-dark table-hover">
+			<thead class="table-dark">
+				<tr>
+					<th scope="col">Record Date</th>
+					<th scope="col">Clerks File No</th>
+					<th scope="col">Document Type</th>
+					<th scope="col">Record Book/Page</th>
+                    <th scope="col">Plat Book/Page</th>
+                    <th scope="col">Blk</th>
+                    <th scope="col">Legal</th>
+                    <th scope="col">Misc Ref</th>
+                    <th scope="col">First Party code</th>
+                    <th scope="col">Second Party Code</th>
+				</tr>
+			</thead>
+			<tbody>
+                {% for row in data%}
+				<tr>
+					<th scope="row">{{row.Rec_Date}}</th>
+					<td>{{row.Clerk_File_No}}</td>
+					<td>{{row.Doc_Type}}</td>
+					<td>{{row.Rec_Book_or_Page}}</td>
+					<td>{{row.Plat_Book_or_Page}}</td>
+					<td>{{row.Blk}}</td>
+					<td>{{row.Legal}}</td>
+					<td>{{row.Misc_Ref}}</td>
+					<td>{{row.First_Party_Code}}</td>
+					<td>{{row.Second_Party_Code}}</td>
+				</tr>
+                {% endfor %}
+			</tbody>
+		</table>
+	</div>
 </div>
 {% endblock %}
