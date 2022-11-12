@@ -1,0 +1,66 @@
+{% extends 'main.html' %} {% block content %}
+
+<div class="container-fluid">
+	<h3 class="text-center my-3">
+		Available case  : Advanced record Search Premium search
+	</h3>
+	<div class="table-responsive p-2">
+		<h4 class="text-center my-2 mt-2">Parties</h4>
+		<table class="table table-bordered border-dark table-hover">
+			<thead class="table-dark">
+				<tr>
+					<th scope="col">Party description</th>
+					<th scope="col">Party Name</th>
+					<th scope="col">Attorney Information</th>
+					<th scope="col">Attorney Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Loop through the parties and create a table -->
+				
+				{% for party in parties %}
+				<tr>
+					<th scope="row">{{party.party_description}}</th>
+					<td>{{party.party_name}}</td>
+					<td>{{party.attorney_information}}</td>
+					{% if party.attorney_name %}
+					<td>{{party.attorney_name}}</td>
+					{%else%}
+					<td>N/A</td>
+					{% endif %}
+				</tr>
+
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div class="table-responsive p-2">
+		<h4 class="text-center my-2 mt-2">Dockets</h4>
+		<table class="table table-bordered border-dark table-hover">
+			<thead class="table-dark">
+				<tr>
+					<th scope="col">Event Date</th>
+					<th scope="col">Docket Number</th>
+					<th scope="col">Book Page</th>
+					<th scope="col" colspan="2">Docket Entry</th>
+					<th scope="col">Event Type</th>
+					<th scope="col" colspan="2">Comments</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for docket in dockets %}
+				<tr>
+				<th scope="row">{{docket.event_date}}</th>
+				<td>{{docket.docket_number}}</td>
+				<td>{{docket.book_page}}</td>
+				<td colspan="2">{{docket.docket_entry}}</td>
+				<td>{{docket.event_type}}</td>
+				<td colspan="2">{{docket.comments}}</td>
+				</tr>
+				
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

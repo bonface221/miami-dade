@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserForm
 from django.contrib import messages
-
+from . models import OfficialSearch, Parties, Dockets, Case
+from datetime import date
 
 
 # from .scrapper import scrapper
@@ -15,7 +17,12 @@ from django.contrib import messages
 
 
 def registerPage(request):
-    if request.method =='POST':
+    # check if user is authenticated if yes redirect the user to homepage
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    # check for post requests and authenticate the user and redirect to login
+    if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
@@ -25,11 +32,16 @@ def registerPage(request):
 
         messages.error(request, form.errors)
 
-
     context = dict()
     return render(request, 'base/registration/register.html', context)
 
+
 def loginPage(request):
+    # check if user is authenticated if yes redirect to home
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    # check for post requests and authenticate the user
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -48,14 +60,16 @@ def loginPage(request):
                 login(request, user)
                 return redirect('home')
             messages.error(request, "Invalid username or password.")
-        messages.error(request,'Invalid username or password')
+        messages.error(request, 'Invalid username or password')
 
     context = dict()
     return render(request, 'base/registration/login.html', context)
 
+
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
 
 @login_required(login_url='login')
 def homePage(request):
@@ -63,160 +77,101 @@ def homePage(request):
     this is the homepage section
     '''
     context = dict()
-    return render(request,'base/home.html',context)
-
-
+    return render(request, 'base/home.html', context)
 
 
 @csrf_exempt
 def showCases(request):
-    
     '''
     check if there is a post request from our scrapper and tackle the rest of the work
     '''
-    sample_data = [
-        {
-            "Clerk_File_No": "2022 R 831976",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 92",
-            "Plat_Book_or_Page": "149/220",
-            'Blk': '5.0',
-            'Legal': "LOT 2A",
-            "Misc_Ref": "2022-020673-CA-01 LISPCV",
-            "First_Party_Code": 'HSBC BANK USA NA (D)',
-            "Second_Party_Code": "LARGAESPADA SILVIA"
-
-        },
-        {
-            "Clerk_File_No": "2022 R 831976",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 92",
-            "Plat_Book_or_Page": "149/220",
-            'Blk': '5.0',
-            'Legal': "LOT 2A",
-            "Misc_Ref": "2022-020673-CA-01 LISPCV",
-            "First_Party_Code": 'HSBC BANK USA NA (D)',
-            "Second_Party_Code": "LARGAESPADA SILVIA"
-
-        },
-        {
-            "Clerk_File_No": "2022 R 831976",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 92",
-            "Plat_Book_or_Page": "149/220",
-            'Blk': '5.0',
-            'Legal': "LOT 2A",
-            "Misc_Ref": "2022-020673-CA-01 LISPCV",
-            "First_Party_Code": 'HSBC BANK USA NA (D)',
-            "Second_Party_Code": "LARGAESPADA SILVIA"
-
-        },
-        {
-            "Clerk_File_No": "2022 R 831976",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 92",
-            "Plat_Book_or_Page": "149/220",
-            'Blk': '5.0',
-            'Legal': "LOT 2A",
-            "Misc_Ref": "2022-020673-CA-01 LISPCV",
-            "First_Party_Code": 'KENDALE LAKES NORTH SECTION NINE HOMEOWNERS ASSN INC (R)',
-            "Second_Party_Code": "HSBC BANK USA NA"
-
-        },
-        {
-            "Clerk_File_No": "2022 R 831976",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 92",
-            "Plat_Book_or_Page": "149/220",
-            'Blk': '5.0',
-            'Legal': "LOT 2A",
-            "Misc_Ref": "2022-020673-CA-01 LISPCV",
-            "First_Party_Code": 'LARGAESPADA SILVIA (R)',
-            "Second_Party_Code": "HSBC BANK USA NA"
-        },
-        {
-            "Clerk_File_No": "2022 R 831982",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 101",
-            "Plat_Book_or_Page": "96/110",
-            'Blk': '17.0',
-            'Legal': "LOT 2",
-            "Misc_Ref": "2022-020677-CA-01 LISPCV",
-            "First_Party_Code": 'LARGAESPADA SILVIA (R)',
-            "Second_Party_Code": "HSBC BANK USA NA"
-        },
-        {
-            "Clerk_File_No": "2022 R 831982",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 101",
-            "Plat_Book_or_Page": "96/110",
-            'Blk': '17.0',
-            'Legal': "LOT 2",
-            "Misc_Ref": "2022-020677-CA-01 LISPCV",
-            "First_Party_Code": 'LARGAESPADA SILVIA (R)',
-            "Second_Party_Code": "HSBC BANK USA NA"
-        },
-        {
-            "Clerk_File_No": "2022 R 832023",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 207",
-            "Plat_Book_or_Page": "89/100",
-            'Blk': '2.0',
-            'Legal': "LOT 2",
-            "Misc_Ref": "2022-020681-CA-01 LISPCV",
-            "First_Party_Code": 'LARGAESPADA SILVIA (R)',
-            "Second_Party_Code": "HSBC BANK USA NA"
-        },
-        {
-            "Clerk_File_No": "2022 R 832023",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 207",
-            "Plat_Book_or_Page": "89/100",
-            'Blk': '2.0',
-            'Legal': "LOT 2",
-            "Misc_Ref": "2022-020681-CA-01 LISPCV",
-            "First_Party_Code": 'LARGAESPADA SILVIA (R)',
-            "Second_Party_Code": "HSBC BANK USA NA"
-        },
-        {
-            "Clerk_File_No": "2022 R 833199",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 3271",
-            "Plat_Book_or_Page": "118/180",
-            'Blk': '75.0',
-            'Legal': "LOT 10",
-            "Misc_Ref": "2022-020662-CA-01 LISPCV",
-            "First_Party_Code": 'LARGAESPADA SILVIA (R)',
-            "Second_Party_Code": "HSBC BANK USA NA"
-        },
-        {
-            "Clerk_File_No": "2022 R 833199",
-            "Doc_Type": "LIS",
-            "Rec_Date": "11/1/2022",
-            "Rec_Book_or_Page": "33447 / 3271",
-            "Plat_Book_or_Page": "118/180",
-            'Blk': '75.0',
-            'Legal': "LOT 10",
-            "Misc_Ref": "2022-020662-CA-01 LISPCV",
-            "First_Party_Code": 'LARGAESPADA SILVIA (R)',
-            "Second_Party_Code": "HSBC BANK USA NA"
-        },
-    ]
-
 
     if request.method == 'POST':
-        data= request.POST
-       
-    context= dict(data=sample_data)
+        uncleaned_data = request.POST
+        data = uncleaned_data.dict()
+        if type(data) is dict:
 
-    return render(request,'base/showCases.html',context)
+            # format the date in a format that is consistent with the db
+            splitted_date = data['Rec Date'].split('/')
+            date_obj = date(int(splitted_date[2]),
+                            int(splitted_date[1]), int(splitted_date[0]))
+
+            # splitting the first party code and second to make them in a format that lets them be saved in the db
+            splitted_parties = data['First Party (Code)  Second Party (Code)'].split(
+                '  ')
+
+            # check if the object already exist if yes do nothing if there is an exeption like the case is not found then the 
+            # case is new => create it
+            try:
+                OfficialSearch.objects.get(Clerks_File_No=data["Clerk's File No"], First_Party_Code=splitted_date[0],
+                                           Second_Party_Code=splitted_date[1], Rec_Book_or_Page=data['Rec Book/Page'], Misc_Ref=data['Misc Ref'])
+
+            except ObjectDoesNotExist:
+                OfficialSearch.objects.create(
+                    Clerks_File_No=data["Clerk's File No"], Doc_Type=data["Doc Type"], Rec_Date=date_obj, Rec_Book_or_Page=data['Rec Book/Page'], Plat_Book_or_Page=data['Plat Book/Page'], Blk=data['Blk'], Legal=data['Legal'], Misc_Ref=data['Misc Ref'], First_Party_Code=splitted_parties[0], Second_Party_Code=splitted_parties[1])
+
+    # pull data from db and order by the recorded date
+    data_from_db = OfficialSearch.objects.all().order_by('-Rec_Date')
+
+    # count the number of items availble
+    total_count=''
+    if data_from_db:
+        total_count = data_from_db.count()
+    context = dict(data=data_from_db, total_count=total_count)
+
+    return render(request, 'base/showCases.html', context)
+
+
+@csrf_exempt
+def advancedSearch(request):
+
+    # check whether the incoming request is post
+    if request.method == "POST":
+        uncleaned_data = request.POST
+        # use the dict function to get the dictionary representation
+        data = uncleaned_data.dict()
+        print(data)
+        if type(data) is dict:
+            # check for parties 
+            if 'Party Description' in data:
+                # print('parties', data)
+                try:
+                    # check if the parties are already saved to avoid duplicates
+                    Parties.objects.get(
+                        party_description=data['Party Description'], party_name=data['Party Name'], attorney_information=data['Attorney Information'])
+                    # if does not exist create it
+                except ObjectDoesNotExist:
+                    Parties.objects.create(
+                        party_description=data['Party Description'], party_name=data[
+                            'Party Name'], attorney_information=data['Attorney Information'], attorney_name=''
+                    )
+
+            # check for the dockets
+            if 'Docket Entry' in data:
+                # print('dockets', data)
+                # check if docket is saved
+                try:
+                    Dockets.objects.get(
+                        event_date=data['Date'], book_page=data['Book/Page'], docket_entry=data['Docket Entry'], event_type=data['Event Type'], comments='Comments'
+                    )
+                # if docket does not exist create it
+                except ObjectDoesNotExist:
+                    Dockets.objects.create(
+                        event_date=data['Date'], docket_number=float(data['Number']), book_page=data[
+                            'Book/Page'], docket_entry=data['Docket Entry'], event_type=data['Event Type'], comments=data['Comments']
+                    )
+            # check if case number is availble
+            # if yes create it because there is only one case number
+            if 'case_number' in data:
+                Case.objects.create(local_case_number=data['case_number'])
+    
+    # get all the parties
+    parties = Parties.objects.all()
+
+    # get all the dockets
+    dockets = Dockets.objects.all()
+
+    # use of context to create a dictionary to be sent to the template
+    context = dict(parties=parties,dockets=dockets)
+
+    return render(request, 'base/advanced_records.html', context)

@@ -2,6 +2,8 @@
 # Tried scraping using selenium but got errors instead 
 # Try checking it out
 
+# This file is not in use do not use it it was for testing purposes
+
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver

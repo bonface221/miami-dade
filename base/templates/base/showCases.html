@@ -1,7 +1,15 @@
 {% extends 'main.html' %} {% block content %}
 
 <div class="container-fluid">
-	<h3 class="text-center my-3">Available cases : Official records Standard search</h3>
+	<h3 class="text-center my-3">
+		{% if total_count %}
+		<span style="color: #d52b32">{{total_count}}</span> Available cases :
+		Official records Standard search {% else %}
+		<span style="color: #d52b32">0</span> Available cases : Official records
+		Standard search 
+		{% endif %}
+	</h3>
+
 	<div class="table-responsive p-2">
 		<table class="table table-bordered border-dark table-hover">
 			<thead class="table-dark">
@@ -10,19 +18,19 @@
 					<th scope="col">Clerks File No</th>
 					<th scope="col">Document Type</th>
 					<th scope="col">Record Book/Page</th>
-                    <th scope="col">Plat Book/Page</th>
-                    <th scope="col">Blk</th>
-                    <th scope="col">Legal</th>
-                    <th scope="col">Misc Ref</th>
-                    <th scope="col">First Party code</th>
-                    <th scope="col">Second Party Code</th>
+					<th scope="col">Plat Book/Page</th>
+					<th scope="col">Blk</th>
+					<th scope="col">Legal</th>
+					<th scope="col">Misc Ref</th>
+					<th scope="col">First Party code</th>
+					<th scope="col">Second Party Code</th>
 				</tr>
 			</thead>
 			<tbody>
-                {% for row in data%}
+				{% for row in data%}
 				<tr>
 					<th scope="row">{{row.Rec_Date}}</th>
-					<td>{{row.Clerk_File_No}}</td>
+					<td>{{row.Clerks_File_No}}</td>
 					<td>{{row.Doc_Type}}</td>
 					<td>{{row.Rec_Book_or_Page}}</td>
 					<td>{{row.Plat_Book_or_Page}}</td>
@@ -32,7 +40,7 @@
 					<td>{{row.First_Party_Code}}</td>
 					<td>{{row.Second_Party_Code}}</td>
 				</tr>
-                {% endfor %}
+				{% endfor %}
 			</tbody>
 		</table>
 	</div>

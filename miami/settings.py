@@ -79,14 +79,31 @@ WSGI_APPLICATION = 'miami.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+
+#I was using Postgress you can use any sql backend of your choice
+# try using Sqlite3 database...
+# Doesn't need reconfiguring .........it can work though sqlite is a lightweight database not to be used in production
+# If using macbook use this command to install pipenv $ pip install --user pipenv
+# use pipenv to re install dependancies ..... $ pipenv install
+# That's all also remmember to use the scrapper to populate the database and make sure the server is running..... python manage.py runserver
+# the scrapper is using virtual env so it is a matter of re-installing from the requirements .txt file ....its using pip ....so run this command $pip uninstall -r requirements.txt
+# Run the spiders using $spider crawl miami and the next one is spider crawl advanced .. miami and advanced are names of spiders.....
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('NAME'),
-        'USER': config('USER'),
-        'PASSWORD': config('PASSWORD'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# This is using Postgress uncomment to use it!!!!!!!!!!!!!!!!!!!!!
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('NAME'),
+#         'USER': config('USER'),
+#         'PASSWORD': config('PASSWORD'),
+#     }
+# }
 
 
 # Password validation

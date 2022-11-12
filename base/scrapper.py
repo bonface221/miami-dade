@@ -1,5 +1,6 @@
 # Tried scraping using BeautifulSoup and Requests but they were not able to do scrape well 
 # Though they were able to login and send requests
+# This file is not to be used ...!!!!!!!!!!!!!
 
 import requests
 from bs4 import BeautifulSoup as bs

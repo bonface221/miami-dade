@@ -1,9 +1,55 @@
-.wrapper_form .title{
-    font-size: 40px;
-    font-weight: bold;
-    
-    text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+* {
+	font-family: "Poppins", sans-serif;
 }
-.have_account{
-    color: #D52B32;
+
+
+.wrapper_form .title {
+	font-size: 40px;
+	font-weight: bold;
+
+	text-align: center;
 }
+.have_account {
+	color: #d52b32;
+}
+
+.outerdiv {
+	height: 100vh;
+}
+.outerdiv .wrapper {
+	/* box-shadow: -7px 5px 75px -17px rgba(0, 0, 0, 0.72);
+	-webkit-box-shadow: -7px 5px 75px -17px rgba(0, 0, 0, 0.72);
+	-moz-box-shadow: -7px 5px 75px -17px rgba(0, 0, 0, 0.72); */
+	border-radius: 36px;
+	background: #fffefe;
+	box-shadow: 11px 11px 32px #c1c1c1, -11px -11px 32px #ffffff;
+}
+
+.wrapper_image .auth_image {
+	border-bottom-left-radius: 50px;
+	border-top-left-radius: 36px;
+	height: 100%;
+}
+/**
+ * ----------------------------------------
+ * animation tilt-in-bottom
+ * ----------------------------------------
+ */
+/* @-webkit-keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+} */

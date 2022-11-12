@@ -6,5 +6,6 @@ urlpatterns=[
     path('login/',views.loginPage,name='login'),
     path('logout/',views.logoutUser,name='logout'),
     path('',views.homePage,name='home'),
-    path('available-cases',views.showCases,name='showCases')
+    path('available-cases',views.showCases,name='showCases'),
+    path('Advanced-search-results',views.advancedSearch,name='advanced')
 ]
