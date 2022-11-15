@@ -25,6 +25,7 @@ class Parties(models.Model):
     # can be null
     attorney_information = models.CharField(max_length=100, blank=True)
     attorney_name = models.CharField(max_length=100, blank=True)
+    local_case_number = models.CharField(max_length=100,blank=True)
 
 
 class Dockets(models.Model):
@@ -41,5 +42,7 @@ class Dockets(models.Model):
 
 class Case(models.Model):
     local_case_number = models.CharField(max_length=100)
+    case_type=models.CharField(max_length=100,null=True)
+    state_number=models.CharField(max_length=100,null=True)
     parties = models.ManyToManyField(Parties)
-    docket = models.ManyToManyField(Dockets)
+    dockets = models.ManyToManyField(Dockets)

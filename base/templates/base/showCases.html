@@ -33,10 +33,22 @@
 					<td>{{row.Clerks_File_No}}</td>
 					<td>{{row.Doc_Type}}</td>
 					<td>{{row.Rec_Book_or_Page}}</td>
+					{% if row.Plat_Book_or_Page %}
 					<td>{{row.Plat_Book_or_Page}}</td>
+					{% else %}
+					<td>N/A</td>
+					{% endif %}
+					{% if row.Blk %}
 					<td>{{row.Blk}}</td>
+					{% else %}
+					<td>N/A</td>
+					{% endif %}
 					<td>{{row.Legal}}</td>
+					{% if row.Misc_Ref %}
 					<td>{{row.Misc_Ref}}</td>
+					{% else %}
+					<td>N/A</td>
+					{% endif %}
 					<td>{{row.First_Party_Code}}</td>
 					<td>{{row.Second_Party_Code}}</td>
 				</tr>

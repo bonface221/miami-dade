@@ -21,7 +21,7 @@
 				
 				{% for party in parties %}
 				<tr>
-					<th scope="row">Local case number</th>
+					<th scope="row">{{party.local_case_number}}</th>
 					<th >{{party.party_description}}</th>
 					<td>{{party.party_name}}</td>
 					<td>{{party.attorney_information}}</td>

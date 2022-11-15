@@ -87,6 +87,7 @@ def showCases(request):
     '''
 
     if request.method == 'POST':
+
         uncleaned_data = request.POST
         data = uncleaned_data.dict()
         if type(data) is dict:
@@ -111,7 +112,7 @@ def showCases(request):
                     Clerks_File_No=data["Clerk's File No"], Doc_Type=data["Doc Type"], Rec_Date=date_obj, Rec_Book_or_Page=data['Rec Book/Page'], Plat_Book_or_Page=data['Plat Book/Page'], Blk=data['Blk'], Legal=data['Legal'], Misc_Ref=data['Misc Ref'], First_Party_Code=splitted_parties[0], Second_Party_Code=splitted_parties[1])
 
     # pull data from db and order by the recorded date
-    data_from_db = OfficialSearch.objects.all().order_by('-Rec_Date')
+    data_from_db = OfficialSearch.objects.all().order_by('-Rec_Date').distinct()
 
     # count the number of items availble
     total_count=''
@@ -130,8 +131,15 @@ def advancedSearch(request):
         uncleaned_data = request.POST
         # use the dict function to get the dictionary representation
         data = uncleaned_data.dict()
-        print(data)
+        # print(data)
         if type(data) is dict:
+            # check if case number is available
+            # if yes create it because there is only one case number
+
+            if 'case_number' in data:
+                Case.objects.create(
+                    local_case_number=data['case_number'], state_number=data['state_number'], case_type=data['case_type'])
+
             # check for parties 
             if 'Party Description' in data:
                 # print('parties', data)
@@ -143,8 +151,9 @@ def advancedSearch(request):
                 except ObjectDoesNotExist:
                     Parties.objects.create(
                         party_description=data['Party Description'], party_name=data[
-                            'Party Name'], attorney_information=data['Attorney Information'], attorney_name=''
+                            'Party Name'], attorney_information=data['Attorney Information'], attorney_name='',local_case_number = data['local_case_number']
                     )
+                    
 
             # check for the dockets
             if 'Docket Entry' in data:
@@ -160,10 +169,9 @@ def advancedSearch(request):
                         event_date=data['Date'], docket_number=float(data['Number']), book_page=data[
                             'Book/Page'], docket_entry=data['Docket Entry'], event_type=data['Event Type'], comments=data['Comments']
                     )
-            # check if case number is availble
-            # if yes create it because there is only one case number
-            if 'case_number' in data:
-                Case.objects.create(local_case_number=data['case_number'])
+                    
+            
+            
     
     # get all the parties
     parties = Parties.objects.all()
