@@ -9,6 +9,7 @@
 		<table class="table table-bordered border-dark table-hover">
 			<thead class="table-dark">
 				<tr>
+					<th scope="col">Local case number</th>
 					<th scope="col">Party description</th>
 					<th scope="col">Party Name</th>
 					<th scope="col">Attorney Information</th>
@@ -20,7 +21,8 @@
 				
 				{% for party in parties %}
 				<tr>
-					<th scope="row">{{party.party_description}}</th>
+					<th scope="row">Local case number</th>
+					<th >{{party.party_description}}</th>
 					<td>{{party.party_name}}</td>
 					<td>{{party.attorney_information}}</td>
 					{% if party.attorney_name %}
