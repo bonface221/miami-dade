@@ -76,7 +76,8 @@ python manage.py runserver
  $pip install -r requirements.txt
  ```
 ### Run the spiders using 
-``` $spider crawl miami 
+```
+ $spider crawl miami 
 ``` 
 and the next one is 
 ```
